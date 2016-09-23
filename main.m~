@@ -1,11 +1,11 @@
 
 %% PARAMETERS:
 %number of agents
-N=10;
+N=3;
 %dimension
 d=2;
 %final time
-T=500;
+T=100;
 %mesh length
 n=100;
 
@@ -22,11 +22,10 @@ v0 = initv(N, d, 2);
 
 
 %% CREATE THE DYNAMICS
-alpha = 0.01;
+alpha = 1;
 beta = 10;
-delta = 1;
-eps = 1e-5;
-dynamics = Dynamics(N, d, alpha, beta, delta, eps);
+d
+dynamics = Dynamics(N, d, 1, 10, 1, 0.00001);
 
 
 %% SOLVE THE SYSTEM

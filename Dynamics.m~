@@ -9,8 +9,6 @@ classdef Dynamics
        
        delta;
        
-       eps;
-       
     
     end
     
@@ -21,13 +19,13 @@ classdef Dynamics
     
     methods
         
-        function obj = Dynamics(N, d, alpha, beta, delta, eps)
+        function obj = Dynamics(N, d, alpha, beta, delta)
             obj.N = N;
             obj.d = d;
             obj.alpha = alpha;
             obj.beta = beta;
             obj.delta = delta;
-            obj.eps = eps;
+            
         end
         
 
@@ -46,7 +44,7 @@ classdef Dynamics
 
             for i=1:obj.N
                 for j=1:obj.N
-                    res(i, :) = res(i, :)+  obj.a(norm(x(i, :) - x(j, :))) * (v(j, :) - v(i, :))     +    obj.u(i, x, v);
+                    res(i, :) = res(i, :)+  obj.a(norm(x(i, :) - x(j, :))) * (v(j, :) - v(i, :));
                 end
                 res(i, :) = res(i, :) / obj.N;
             end
@@ -72,7 +70,7 @@ classdef Dynamics
         end
         
         function res = perturbation(obj, i, x, v)
-            res = zeros(1, obj.d);
+            res = zeros(obj.d);
             vbar = obj.mean(v);
             for j=1:obj.N
                 res = res+ obj.w(i, j, x)*(v(j, :) - vbar);
@@ -93,7 +91,7 @@ classdef Dynamics
         end
         
         function res = mean(obj, v)
-            res = zeros(1, obj.d);
+            res = zeros(obj.d);
             for i=1:obj.N
                 res = res+ v(i, :);
             end
