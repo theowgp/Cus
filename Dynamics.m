@@ -1,15 +1,16 @@
 classdef Dynamics
        
     properties
-        N;
-        d;
+       N;
+       d;
         
-       alpha;
-       beta;
+       gamma;
        
        delta;
        
        eps;
+       
+       R;
        
     
     end
@@ -21,13 +22,12 @@ classdef Dynamics
     
     methods
         
-        function obj = Dynamics(N, d, alpha, beta, delta, eps)
+        function obj = Dynamics(N, d, gamma, delta, R)
             obj.N = N;
             obj.d = d;
-            obj.alpha = alpha;
-            obj.beta = beta;
             obj.delta = delta;
-            obj.eps = eps;
+            obj.gamma = gamma;
+            obj.R = R;
         end
         
 
@@ -68,36 +68,33 @@ classdef Dynamics
         
         
         function res = u(obj, i, x, v)
-            res = -obj.alpha*(v(i, :) - obj.mean(v)) - obj.beta * obj.perturbation(i, x, v);
+            res = -obj.gamma * (v(i, :) - obj.mean(i, x, v, obj.R)) ;
         end
         
-        function res = perturbation(obj, i, x, v)
-            res = zeros(1, obj.d);
-            vbar = obj.mean(v);
-            for j=1:obj.N
-                res = res+ obj.w(i, j, x)*(v(j, :) - vbar);
-            end
-            res = res/ obj.eta(i, x);
-        end
-        
-        function res = w(obj, i, j, x)
-            res = 1/(1 + norm(x(i,:) - x(j,:))^2)^obj.eps;
-        end
-        
-        function res = eta(obj, i, x)
+                
+        function res = eta(obj, x, R)
             res = 0;
-            for j=1:obj.N
-                res = res+ obj.w(i, j, x);
+            max1 = 0;
+            for i=1:obj.N
+                max0 = 0;
+                for k=1:obj.N
+                    max0 = max0+ obj.khi(norm(x(i, :) - x(k, :)), R);
+                end
+                if max1<max0
+                    max1 = max0;
+                end
             end
-            res = res/obj.N;
+            res = max1;
         end
         
-        function res = mean(obj, v)
+        
+        
+        function res = mean(obj, i, x, v, R)
             res = zeros(1, obj.d);
-            for i=1:obj.N
-                res = res+ v(i, :);
+            for j=1:obj.N
+                res = res+ obj.khi(norm(x(i, :) - x(j, :)), R) * v(j, :);
             end
-            res = res/obj.N;
+            res = res/obj.eta(x, R);
         end
     
         
@@ -106,6 +103,19 @@ classdef Dynamics
     
     
     methods(Static)
+        
+        
+        
+        
+        function res = khi(r, R)
+            res = 0;
+            if r<=R
+                res = 1;
+            end
+        end
+        
+        
+        
     end
     
 end

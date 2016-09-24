@@ -10,7 +10,7 @@ end
 
 % % uniform
 % for i = 2:N
-%     x0(i, 1) = x0(i-1, 1) + 1;
+%     x(i, 1) = x(i-1, 1) + 1;
 % end
 
 end

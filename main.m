@@ -5,7 +5,7 @@ N=10;
 %dimension
 d=2;
 %final time
-T=500;
+T=50;
 %mesh length
 n=100;
 
@@ -22,11 +22,10 @@ v0 = initv(N, d, 2);
 
 
 %% CREATE THE DYNAMICS
-alpha = 0.01;
-beta = 10;
+gamma = 1;
 delta = 1;
-eps = 1e-5;
-dynamics = Dynamics(N, d, alpha, beta, delta, eps);
+R=3;
+dynamics = Dynamics(N, d, gamma, delta, R);
 
 
 %% SOLVE THE SYSTEM
