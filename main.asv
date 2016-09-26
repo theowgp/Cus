@@ -77,9 +77,9 @@ end
 
 %% PLOT 1/2N^2  sumij||xi -xj ||^2 evolution
 for i = 1:length(t)
-x = reshape(sol(i, 1 : N*d), [d, N])';
-% y = reshape(sol(i, N*d+1 : 2*N*d), [d, N])';    
-Y(i) =  B(x, x, N);
+x = reshape(sol(1 : N*d), [d, N])';
+y = reshape(sol(N*d+1 : 2*N*d), [d, N])'    
+Y(i) =  
 end
 figure
 plot(t, Y);
