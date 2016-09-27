@@ -1,6 +1,7 @@
-function v = initv( N, d, maxv )
+function v = initv(N, d, maxv)
 v = zeros(N, d);
 
+% % random
 % a=2;
 % b=-1;
 % 
@@ -16,6 +17,6 @@ v = zeros(N, d);
 % % N = 2, d = 1
 % v = [-0.1; 0.1];
 
-v = [-1 0; 0 1;  1 0];
+v = [1 2;  0 0;  1 1];
 end
 

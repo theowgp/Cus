@@ -1,11 +1,10 @@
-
 %% PARAMETERS:
 %number of agents
 N = 3;
 %dimension
 d = 2;
 %final time
-T = 500;
+T = 100;
 %mesh length
 n = 1000;
 
@@ -13,16 +12,16 @@ n = 1000;
 
 %% INITIAL CONDITIONS
 %initial positions
-x0 = initx(N, d, N);
+x0 = initx(N, d, N*1);
 
 %initial velocities
-v0 = initv(N, d, 2);
+v0 = initv(N, d, 1);
 
 
 
 
 %% CREATE THE DYNAMICS
-delta = 0.45;
+delta = 0.4;
 dynamics = Dynamics(N, d, delta);
 
 
@@ -59,8 +58,25 @@ f = @(arg)    reshape(dynamics.f(    reshape(arg(1 : N*d), [d, N])',      reshap
 %% PLOT TRAJECTORIES
 for i = 1:N
     plot(sol(:, 2*i-1), sol(:, 2*i));
-    hold all
+    hold all 
 end
+
+% % plot animated lines
+% for i = 1:N
+%     AL(i) = animatedline; 
+% end
+% axis([-5 10 0 15])
+% for k = 1:length(t);
+%     % add points to the animated line     
+%     for i=1:N
+%         addpoints(AL(i), sol(k, 2*i-1), sol(k, 2*i));
+%     end
+%     % update screen
+%     drawnow 
+% end
+
+
+
 
 % %% PLOT TRAJECTORIES with respect to time for d = 1
 % % positions
@@ -75,11 +91,38 @@ end
 %     hold all
 % end
 
-%% PLOT 1/2N^2  sumij||xi -xj ||^2 evolution
+%% PLOT 1/2N^2  sumij||xi -xj ||^2 evolution and ||x1 - x2||^2 evolution
 for i = 1:length(t)
-x = reshape(sol(i, 1 : N*d), [d, N])';
-% y = reshape(sol(i, N*d+1 : 2*N*d), [d, N])';    
-Y(i) =  B(x, x, N);
+    x = reshape(sol(i, 1 : N*d), [d, N])';
+    v = reshape(sol(i, N*d+1 : 2*N*d), [d, N])';
+    YB(i) =  B(x, x, N);
+    YBp(i) = Bparticular(x, x, 1, 2);
+    YdBp(i) = dBparticular(x, v, 1, 2);
 end
+
 figure
-plot(t, Y);
+plot(t, YB);
+figure
+plot(t, YBp);
+figure
+plot(t, YdBp);
+
+% subplot(2,2,3)
+% axis([0 11 0 21])
+% alYBp = animatedline;
+% for k = 1:length(t)
+%     x = reshape(sol(k, 1 : N*d), [d, N])';
+%     YBp(k) = Bparticular(x, x, 1, 2);
+%     addpoints(alYBp, t(k), YBp(k));
+%     drawnow
+% end
+% 
+% subplot(2,2,3)
+% axis([0 11 0 21])
+% alYBp = animatedline;
+% for k = 1:length(t)
+%     x = reshape(sol(k, 1 : N*d), [d, N])';
+%     YBp(k) = Bparticular(x, x, 1, 2);
+%     addpoints(alYBp, t(k), YBp(k));
+%     drawnow
+% end
