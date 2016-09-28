@@ -56,6 +56,8 @@ classdef Dynamics
     
         function res = a(obj, r)
             res = 1 / (1+r^2)^obj.delta;
+%             res = r^2;
+%             res = sin(r^2);
         end
         
     

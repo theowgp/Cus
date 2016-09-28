@@ -1,21 +1,23 @@
+clear all
+
 %% PARAMETERS:
 %number of agents
-N = 3;
+N = 10;
 %dimension
 d = 2;
 %final time
-T = 100;
+T = 50;
 %mesh length
-n = 1000;
+n = 100;
 
 
 
 %% INITIAL CONDITIONS
 %initial positions
-x0 = initx(N, d, N*1);
+x0 = initx(N, d, N*2);
 
 %initial velocities
-v0 = initv(N, d, 1);
+v0 = initv(N, d, 3);
 
 
 
@@ -61,23 +63,7 @@ for i = 1:N
     hold all 
 end
 title('evolution of the system');
-
-% % plot animated lines
-% for i = 1:N
-%     AL(i) = animatedline; 
-% end
-% axis([-5 10 0 15])
-% for k = 1:length(t);
-%     % add points to the animated line     
-%     for i=1:N
-%         addpoints(AL(i), sol(k, 2*i-1), sol(k, 2*i));
-%     end
-%     % update screen
-%     drawnow 
-% end
-
-
-
+ax = gca;
 
 % %% PLOT TRAJECTORIES with respect to time for d = 1
 % % positions
@@ -95,23 +81,44 @@ title('evolution of the system');
 %% PLOT 1/2N^2  sumij||xi -xj ||^2 evolution and ||xip - xjp||^2 evolution
 ip = 1;
 jp = 2;
-for i = 1:length(t)
-    x = reshape(sol(i, 1 : N*d), [d, N])';
-    v = reshape(sol(i, N*d+1 : 2*N*d), [d, N])';
-    YB(i) =  B(x, x, N);
-    YBp(i) = Bparticular(x, x, ip, jp);
-    YdBp(i) = dBparticular(x, v, ip, jp);
+for k = 1:length(t)
+    x = reshape(sol(k, 1 : N*d), [d, N])';
+    v = reshape(sol(k, N*d+1 : 2*N*d), [d, N])';
+    YB(k) =  B(x, x, N);
+    YBp(k) = Bparticular(x, x, ip, jp);
+    YdBp(k) = dBparticular(x, v, ip, jp);
+    YddBp(k) = ddBparticular(dynamics, x, v, ip, jp);
 end
 
+% figure
+% plot(t, YB);
+% title('1/2N^2  sumij||xi -xj ||^2');
 figure
-plot(t, YB);
-title('1/2N^2  sumij||xi -xj ||^2');
-figure
-plot(t, YBp);
-title(sprintf('||x%d -x%d ||^2', ip, jp));
+plot(t, YddBp);
+title(sprintf('d2/dt2 ||x%d -x%d ||^2', ip, jp));
 figure
 plot(t, YdBp);
 title(sprintf('d/dt ||x%d -x%d ||^2 = 2 (x%d - x%d)(v%d - v%d)', ip, jp, ip, jp, ip, jp));
+figure
+plot(t, YBp);
+title(sprintf('||x%d -x%d ||^2', ip, jp));
+
+ 
+% % % plot animated lines
+% figure
+% for i = 1:N
+%     AL(i) = animatedline; 
+% end
+% axis([ax.XLim ax.YLim]);
+% for k = 1:length(t);
+%     % add points to the animated line     
+%     for i=1:N
+%         addpoints(AL(i), sol(k, 2*i-1), sol(k, 2*i));
+%     end
+%     % update screen
+%     drawnow 
+% end
+% title('evolution animated');
 
 % subplot(2,2,3)
 % axis([0 11 0 21])
