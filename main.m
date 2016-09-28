@@ -60,6 +60,7 @@ for i = 1:N
     plot(sol(:, 2*i-1), sol(:, 2*i));
     hold all 
 end
+title('evolution of the system');
 
 % % plot animated lines
 % for i = 1:N
@@ -91,21 +92,26 @@ end
 %     hold all
 % end
 
-%% PLOT 1/2N^2  sumij||xi -xj ||^2 evolution and ||x1 - x2||^2 evolution
+%% PLOT 1/2N^2  sumij||xi -xj ||^2 evolution and ||xip - xjp||^2 evolution
+ip = 1;
+jp = 2;
 for i = 1:length(t)
     x = reshape(sol(i, 1 : N*d), [d, N])';
     v = reshape(sol(i, N*d+1 : 2*N*d), [d, N])';
     YB(i) =  B(x, x, N);
-    YBp(i) = Bparticular(x, x, 1, 2);
-    YdBp(i) = dBparticular(x, v, 1, 2);
+    YBp(i) = Bparticular(x, x, ip, jp);
+    YdBp(i) = dBparticular(x, v, ip, jp);
 end
 
 figure
 plot(t, YB);
+title('1/2N^2  sumij||xi -xj ||^2');
 figure
 plot(t, YBp);
+title(sprintf('||x%d -x%d ||^2', ip, jp));
 figure
 plot(t, YdBp);
+title(sprintf('d/dt ||x%d -x%d ||^2 = 2 (x%d - x%d)(v%d - v%d)', ip, jp, ip, jp, ip, jp));
 
 % subplot(2,2,3)
 % axis([0 11 0 21])
